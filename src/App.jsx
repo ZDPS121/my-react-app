@@ -17,7 +17,7 @@ function App() {
     setError('');
 
     try {
-      const params = "A=" + A + "&B=" + B;
+      const params = "a=" + A + "&b=" + B;
       const response = await fetch(
         `https://b0upvso9xk.execute-api.us-east-1.amazonaws.com/live?${params}`
       );
