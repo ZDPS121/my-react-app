@@ -1,15 +1,15 @@
 import './App.css'
 
-function RegisterPage() {
+function RegisterPage({ onNavigate }) {
   function handleRegister(event) {
     event.preventDefault()
-    window.location.assign('/success')
+    onNavigate(event, '/success')
   }
 
   return (
     <main className="site-shell">
       <nav className="nav-bar" aria-label="Main navigation">
-        <a className="brand" href="/" aria-label="Supload+ home">
+        <a className="brand" href="/" onClick={(event) => onNavigate(event, '/')} aria-label="Supload+ home">
           <span className="brand-mark" aria-hidden="true">S</span>
           <span>Supload<span>+</span></span>
         </a>
@@ -33,7 +33,7 @@ function RegisterPage() {
             <span>I agree to the terms and privacy policy.</span>
           </label>
           <button className="primary-button form-submit" type="submit">Create account <span aria-hidden="true">→</span></button>
-          <p className="form-note">Already have an account? <a href="/">Return home</a></p>
+          <p className="form-note">Already have an account? <a href="/" onClick={(event) => onNavigate(event, '/')}>Return home</a></p>
         </form>
       </section>
       <footer><span>© 2025 Supload Inc.</span><span>Safe hands for your data.</span></footer>
