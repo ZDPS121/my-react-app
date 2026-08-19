@@ -1,9 +1,44 @@
+import { useState } from 'react'
+import { CognitoIdentityProviderClient, SignUpCommand } from '@aws-sdk/client-cognito-identity-provider'
 import './App.css'
 
+const cognitoClient = new CognitoIdentityProviderClient({ region: 'us-east-1' })
+
 function RegisterPage({ auth, onNavigate }) {
-  function handleRegister(event) {
+  const [formError, setFormError] = useState('')
+  const [formMessage, setFormMessage] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  async function handleRegister(event) {
     event.preventDefault()
-    auth.signinRedirect({ extraQueryParams: { screen_hint: 'signup' } })
+    setFormError('')
+    setFormMessage('')
+    setIsSubmitting(true)
+
+    const formData = new FormData(event.currentTarget)
+    const email = String(formData.get('email'))
+    const name = String(formData.get('name'))
+    const password = String(formData.get('password'))
+
+    try {
+      await cognitoClient.send(new SignUpCommand({
+        ClientId: auth.settings.client_id,
+        Username: email,
+        Password: password,
+        UserAttributes: [
+          { Name: 'email', Value: email },
+          { Name: 'name', Value: name },
+        ],
+      }))
+      setFormMessage('Account created. Check your email for the confirmation code, then sign in.')
+      event.currentTarget.reset()
+    } catch (error) {
+      setFormError(error.name === 'UsernameExistsException'
+        ? 'An account with this email already exists.'
+        : error.message || 'Unable to create your account.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -23,16 +58,20 @@ function RegisterPage({ auth, onNavigate }) {
         <form className="account-form" onSubmit={handleRegister}>
           <div className="form-heading"><span>CREATE ACCOUNT</span><span>01 / 01</span></div>
           <label htmlFor="name">Full name</label>
-          <input id="name" name="name" type="text" placeholder="Alex Morgan" required />
+          <input id="name" name="name" type="text" placeholder="Alex Morgan" autoComplete="name" required />
           <label htmlFor="email">Work email</label>
-          <input id="email" name="email" type="email" placeholder="alex@company.com" required />
+          <input id="email" name="email" type="email" placeholder="alex@company.com" autoComplete="email" required />
           <label htmlFor="password">Password</label>
-          <input id="password" name="password" type="password" placeholder="At least 8 characters" minLength="8" required />
+          <input id="password" name="password" type="password" placeholder="At least 8 characters" autoComplete="new-password" minLength="8" required />
           <label className="checkbox-label">
             <input type="checkbox" required />
             <span>I agree to the terms and privacy policy.</span>
           </label>
-          <button className="primary-button form-submit" type="submit">Continue to secure sign-up <span aria-hidden="true">→</span></button>
+          {formError && <p className="form-note" role="alert">{formError}</p>}
+          {formMessage && <p className="form-note" role="status">{formMessage}</p>}
+          <button className="primary-button form-submit" type="submit" disabled={isSubmitting}>
+            {isSubmitting ? 'Creating account...' : 'Create account'} <span aria-hidden="true">→</span>
+          </button>
           <p className="form-note">Already have an account? <a href="/" onClick={(event) => onNavigate(event, '/')}>Return home</a></p>
         </form>
       </section>
