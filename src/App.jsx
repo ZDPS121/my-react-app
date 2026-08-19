@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { useAuth } from 'react-oidc-context'
 import RegisterPage from './RegisterPage'
 import SuccessPage from './SuccessPage'
-
+//env -u GITHUB_TOKEN git push origin main
 function HomePage({ auth, onNavigate }) {
   return (
     <main className="site-shell">
@@ -77,7 +77,8 @@ function App() {
   if (auth.isLoading) return <main className="auth-state">Loading secure sign-in...</main>
   if (auth.error) return <main className="auth-state">Unable to sign in: {auth.error.message}</main>
   if (path === '/register') return <RegisterPage auth={auth} onNavigate={handleNavigate} />
-  if (path === '/success') return <SuccessPage onNavigate={handleNavigate} />
+  if (path === '/success' && auth.isAuthenticated) return <SuccessPage onNavigate={handleNavigate} />
+  if (path === '/success') return <main className="auth-state">Please sign in to continue. <a href="/register">Register or sign in</a></main>
   return <HomePage auth={auth} onNavigate={handleNavigate} />
 }
 

@@ -10,6 +10,9 @@ const cognitoAuthConfig = {
   redirect_uri: `${window.location.origin}/success`,
   response_type: 'code',
   scope: 'phone openid email',
+  onSigninCallback: () => {
+    window.history.replaceState({}, document.title, '/success')
+  },
 }
 
 createRoot(document.getElementById('root')).render(
