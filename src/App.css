@@ -37,7 +37,7 @@ h1 { font-size: clamp(45px, 5.3vw, 76px); font-weight: 600; letter-spacing: -0.0
 h1 em { color: var(--lime); font-style: normal; }
 .hero-text { color: var(--muted); font-size: 16px; line-height: 1.65; margin: 30px 0 34px; max-width: 450px; }
 .hero-actions { align-items: center; display: flex; flex-wrap: wrap; gap: 24px; }
-.primary-button { background: var(--lime); border: 1px solid var(--lime); border-radius: 2px; color: var(--ink); font-size: 12px; font-weight: 800; padding: 16px 19px; transition: background 180ms ease, transform 180ms ease; }
+.primary-button { background: var(--lime); border: 1px solid var(--lime); border-radius: 2px; color: var(--ink); display: inline-block; font-size: 12px; font-weight: 800; padding: 16px 19px; transition: background 180ms ease, transform 180ms ease; }
 .primary-button span { font-size: 18px; line-height: 0; margin-left: 20px; vertical-align: -1px; }
 .primary-button:hover { background: #efffb0; transform: translateY(-2px); }
 .play-button { background: transparent; border: 0; color: var(--paper); font-size: 12px; font-weight: 700; padding: 12px 0; }
