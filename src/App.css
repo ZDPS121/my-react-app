@@ -84,6 +84,7 @@ footer { color: #69705d; display: flex; font-family: var(--mono); font-size: 9px
 .success-page .eyebrow { margin: 0; }
 .success-page .hero-text { margin: 8px auto 14px; max-width: 420px; }
 .success-mark { align-items: center; background: var(--lime); border-radius: 50%; color: var(--ink); display: flex; font-size: 28px; height: 64px; justify-content: center; margin-bottom: 8px; width: 64px; }
+.auth-state { align-items: center; background: var(--ink); color: var(--paper); display: flex; font-family: var(--mono); font-size: 12px; justify-content: center; min-height: 100svh; padding: 24px; text-align: center; }
 
 @keyframes rise-in { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 @media (max-width: 760px) {

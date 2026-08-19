@@ -1,9 +1,10 @@
 import './App.css'
 import { useEffect, useState } from 'react'
+import { useAuth } from 'react-oidc-context'
 import RegisterPage from './RegisterPage'
 import SuccessPage from './SuccessPage'
 
-function HomePage({ onNavigate }) {
+function HomePage({ auth, onNavigate }) {
   return (
     <main className="site-shell">
       <nav className="nav-bar" aria-label="Main navigation">
@@ -16,7 +17,11 @@ function HomePage({ onNavigate }) {
           <a href="#workflow">How it works</a>
           <a href="#pricing">Pricing</a>
         </div>
-        <a className="nav-login" href="/register" onClick={(event) => onNavigate(event, '/register')}>Register <span aria-hidden="true">↗</span></a>
+        {auth.isAuthenticated ? (
+          <button className="nav-login" type="button" onClick={() => auth.removeUser()}>Sign out <span aria-hidden="true">↗</span></button>
+        ) : (
+          <a className="nav-login" href="/register" onClick={(event) => onNavigate(event, '/register')}>Register <span aria-hidden="true">↗</span></a>
+        )}
       </nav>
 
       <section className="hero" aria-labelledby="hero-title">
@@ -25,7 +30,7 @@ function HomePage({ onNavigate }) {
           <h1 id="hero-title">Move sensitive files<br /><em>with confidence.</em></h1>
           <p className="hero-text">The simple, secure way to send important data. Encrypted end-to-end, built for the moments that matter.</p>
           <div className="hero-actions">
-            <a className="primary-button" href="/register" onClick={(event) => onNavigate(event, '/register')}>Start uploading <span aria-hidden="true">→</span></a>
+            <button className="primary-button" type="button" onClick={() => auth.isAuthenticated ? onNavigate(null, '/success') : auth.signinRedirect()}>Start uploading <span aria-hidden="true">→</span></button>
             <button className="play-button" type="button" aria-label="Watch how Supload+ works"><span aria-hidden="true">▶</span> See how it works</button>
           </div>
           <p className="trust-note"><span aria-hidden="true">✦</span> Trusted by teams who handle the important stuff</p>
@@ -54,6 +59,7 @@ function HomePage({ onNavigate }) {
 }
 
 function App() {
+  const auth = useAuth()
   const [path, setPath] = useState(window.location.pathname.replace(/\/$/, '') || '/')
 
   useEffect(() => {
@@ -63,14 +69,16 @@ function App() {
   }, [])
 
   function handleNavigate(event, nextPath) {
-    event.preventDefault()
+    event?.preventDefault()
     window.history.pushState({}, '', nextPath)
     setPath(nextPath)
   }
 
-  if (path === '/register') return <RegisterPage onNavigate={handleNavigate} />
+  if (auth.isLoading) return <main className="auth-state">Loading secure sign-in...</main>
+  if (auth.error) return <main className="auth-state">Unable to sign in: {auth.error.message}</main>
+  if (path === '/register') return <RegisterPage auth={auth} onNavigate={handleNavigate} />
   if (path === '/success') return <SuccessPage onNavigate={handleNavigate} />
-  return <HomePage onNavigate={handleNavigate} />
+  return <HomePage auth={auth} onNavigate={handleNavigate} />
 }
 
 export default App

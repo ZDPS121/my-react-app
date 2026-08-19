@@ -1,9 +1,9 @@
 import './App.css'
 
-function RegisterPage({ onNavigate }) {
+function RegisterPage({ auth, onNavigate }) {
   function handleRegister(event) {
     event.preventDefault()
-    onNavigate(event, '/success')
+    auth.signinRedirect({ extraQueryParams: { screen_hint: 'signup' } })
   }
 
   return (
@@ -32,7 +32,7 @@ function RegisterPage({ onNavigate }) {
             <input type="checkbox" required />
             <span>I agree to the terms and privacy policy.</span>
           </label>
-          <button className="primary-button form-submit" type="submit">Create account <span aria-hidden="true">→</span></button>
+          <button className="primary-button form-submit" type="submit">Continue to secure sign-up <span aria-hidden="true">→</span></button>
           <p className="form-note">Already have an account? <a href="/" onClick={(event) => onNavigate(event, '/')}>Return home</a></p>
         </form>
       </section>
