@@ -5,29 +5,43 @@ import heroImg from './assets/hero.png'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [A, setA] = useState('');
+  const [B, setB] = useState('');
+  const [sum, setSum] = useState(null);
+
+  function handleAdd(event) {
+    event.preventDefault();
+    setSum(Number(A) + Number(B));
+  }
 
   return (
     <>
       <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
         <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
+          <h1>Add A and B</h1>
+          <form className="addition-form" onSubmit={handleAdd}>
+            <label>
+              A
+              <input
+                type="number"
+                value={A}
+                onChange={(event) => setA(event.target.value)}
+                required
+              />
+            </label>
+            <label>
+              B
+              <input
+                type="number"
+                value={B}
+                onChange={(event) => setB(event.target.value)}
+                required
+              />
+            </label>
+            <button type="submit">Add</button>
+          </form>
+          {sum !== null && <p role="status">A + B = {sum}</p>}
         </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
       </section>
 
       <div className="ticks"></div>
