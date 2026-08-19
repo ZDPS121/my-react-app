@@ -4,8 +4,9 @@ import viteLogo from './assets/vite.svg'
 import './App.css'
 
 function App() {
-  const [A, setA] = useState('');
-  const [B, setB] = useState('');
+  const [A, getA,setA] = useState('');
+  const [B, getB,setB] = useState('');
+  
   const [sum, setSum] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -16,7 +17,7 @@ function App() {
     setError('');
 
     try {
-      const params = new URLSearchParams({ a: A, b: B });
+      const params = getA(A) + '&B=' + getB(B);
       const response = await fetch(
         `https://b0upvso9xk.execute-api.us-east-1.amazonaws.com/live?${params}`
       );
