@@ -19,10 +19,17 @@ function RegisterPage({ auth, onNavigate }) {
     const email = String(formData.get('email'))
     const name = String(formData.get('name'))
     const password = String(formData.get('password'))
+    const clientId = auth.settings?.client_id
+
+    if (!clientId) {
+      setFormError('Cognito is not configured: set VITE_COGNITO_CLIENT_ID in the deployment environment and rebuild.')
+      setIsSubmitting(false)
+      return
+    }
 
     try {
       await cognitoClient.send(new SignUpCommand({
-        ClientId: auth.settings.client_id,
+        ClientId: clientId,
         Username: email,
         Password: password,
         UserAttributes: [
