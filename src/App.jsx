@@ -17,10 +17,11 @@ function App() {
     setError('');
 
     try {
-      const params = "a=" + A + "&b=" + B;
-      const response = await fetch(
-        `/api/live?${params}`
-      );
+      const params = new URLSearchParams({ a: A, b: B });
+      const apiUrl = import.meta.env.DEV
+        ? '/api/live'
+        : 'https://b0upvso9xk.execute-api.us-east-1.amazonaws.com/live';
+      const response = await fetch(`${apiUrl}?${params}`);
 
       if (!response.ok) {
         throw new Error('The API request failed.');
