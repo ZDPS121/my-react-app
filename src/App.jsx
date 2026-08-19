@@ -7,10 +7,31 @@ function App() {
   const [A, setA] = useState('');
   const [B, setB] = useState('');
   const [sum, setSum] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  function handleAdd(event) {
+  async function handleAdd(event) {
     event.preventDefault();
-    setSum(Number(A) + Number(B));
+    setIsLoading(true);
+    setError('');
+
+    try {
+      const params = new URLSearchParams({ a: A, b: B });
+      const response = await fetch(
+        `https://b0upvso9xk.execute-api.us-east-1.amazonaws.com/live?${params}`
+      );
+
+      if (!response.ok) {
+        throw new Error('The API request failed.');
+      }
+
+      const data = await response.json();
+      setSum(data.sum);
+    } catch (requestError) {
+      setError(requestError.message);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -37,9 +58,12 @@ function App() {
                 required
               />
             </label>
-            <button type="submit">Add</button>
+            <button type="submit" disabled={isLoading}>
+              {isLoading ? 'Adding...' : 'Add'}
+            </button>
           </form>
           {sum !== null && <p role="status">A + B = {sum}</p>}
+          {error && <p role="alert">{error}</p>}
         </div>
       </section>
 
