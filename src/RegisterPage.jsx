@@ -16,6 +16,7 @@ function RegisterPage({ auth, onNavigate }) {
     setIsSubmitting(true)
 
     const formData = new FormData(event.currentTarget)
+    const username = String(formData.get('username'))
     const email = String(formData.get('email'))
     const name = String(formData.get('name'))
     const password = String(formData.get('password'))
@@ -30,7 +31,7 @@ function RegisterPage({ auth, onNavigate }) {
     try {
       await cognitoClient.send(new SignUpCommand({
         ClientId: clientId,
-        Username: email,
+        Username: username,
         Password: password,
         UserAttributes: [
           { Name: 'email', Value: email },
@@ -66,6 +67,8 @@ function RegisterPage({ auth, onNavigate }) {
           <div className="form-heading"><span>CREATE ACCOUNT</span><span>01 / 01</span></div>
           <label htmlFor="name">Full name</label>
           <input id="name" name="name" type="text" placeholder="Alex Morgan" autoComplete="name" required />
+          <label htmlFor="username">Username</label>
+          <input id="username" name="username" type="text" placeholder="alexmorgan" autoComplete="username" pattern="[A-Za-z0-9_]{3,128}" title="Use 3-128 letters, numbers, or underscores." required />
           <label htmlFor="email">Work email</label>
           <input id="email" name="email" type="email" placeholder="alex@company.com" autoComplete="email" required />
           <label htmlFor="password">Password</label>
