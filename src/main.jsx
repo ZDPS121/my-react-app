@@ -5,8 +5,8 @@ import './index.css'
 import App from './App.jsx'
 
 const cognitoAuthConfig = {
-  authority: 'https://cognito-idp.us-east-1.amazonaws.com/us-east-1_1Vw17P3wH',
-  client_id: '5bdsh32mtko9aa6rqtt6lr14jr',
+  authority: import.meta.env.VITE_COGNITO_ISSUER,
+  client_id: import.meta.env.VITE_COGNITO_CLIENT_ID,
   redirect_uri: `${window.location.origin}/success`,
   response_type: 'code',
   scope: 'phone openid email',
