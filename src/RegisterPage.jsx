@@ -20,6 +20,7 @@ function RegisterPage({ auth, onNavigate }) {
     const email = String(formData.get('email'))
     const name = String(formData.get('name'))
     const password = String(formData.get('password'))
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'
     const clientId = auth.settings?.client_id
 
     if (!clientId) {
@@ -36,6 +37,7 @@ function RegisterPage({ auth, onNavigate }) {
         UserAttributes: [
           { Name: 'email', Value: email },
           { Name: 'name', Value: name },
+          { Name: 'zoneinfo', Value: timezone },
         ],
       }))
       setFormMessage('Account created. Check your email for the confirmation code, then sign in.')
